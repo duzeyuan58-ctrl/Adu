@@ -1,0 +1,7 @@
+{
+  "name": "Gemini AI Background Remover & Editor",
+  "description": "Professional image editing tool powered by Gemini 2.5 Flash Image. Easily remove backgrounds or apply custom AI-driven edits to your photos.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
