@@ -61,7 +61,6 @@ const FILTER_PRESETS: FilterPreset[] = [
     icon: <ImageIcon className="w-4 h-4" />,
     color: 'bg-slate-100 text-slate-600'
   },
-  // --- 电商核心场景 (Product Scenes) ---
   {
     id: 'prod_minimal',
     category: 'product',
@@ -90,15 +89,6 @@ const FILTER_PRESETS: FilterPreset[] = [
     color: 'bg-pink-100 text-pink-500'
   },
   {
-    id: 'prod_tech',
-    category: 'product',
-    name: { en: 'Industrial', zh: '工业风格' },
-    description: { en: 'Cool & Hard', zh: '硬核水泥感' },
-    prompt: 'Place the product on a cool gray concrete surface in an industrial setting. Raw textures, metallic accents, and dramatic high-contrast lighting.',
-    icon: <Laptop className="w-4 h-4" />,
-    color: 'bg-zinc-200 text-zinc-700'
-  },
-  {
     id: 'prod_nature',
     category: 'product',
     name: { en: 'Outdoor', zh: '户外自然' },
@@ -107,25 +97,6 @@ const FILTER_PRESETS: FilterPreset[] = [
     icon: <Trees className="w-4 h-4" />,
     color: 'bg-emerald-100 text-emerald-700'
   },
-  {
-    id: 'prod_night',
-    category: 'product',
-    name: { en: 'Late Night', zh: '深夜氛围' },
-    description: { en: 'Urban Glow', zh: '静谧霓虹感' },
-    prompt: 'Place the product in a moody late-night urban setting. On a dark sleek surface with deep blue shadows and warm bokeh city lights in the background.',
-    icon: <Moon className="w-4 h-4" />,
-    color: 'bg-indigo-900 text-indigo-100'
-  },
-  {
-    id: 'prod_cafe',
-    category: 'product',
-    name: { en: 'Cafe', zh: '午后咖啡' },
-    description: { en: 'Cozy Vibe', zh: '生活化场景' },
-    prompt: 'Place the product on a rustic coffee shop table. Warm sunlight, a blurred coffee cup nearby, and a cozy bokeh background.',
-    icon: <Coffee className="w-4 h-4" />,
-    color: 'bg-amber-100 text-amber-800'
-  },
-  // --- 艺术创意滤镜 (Artistic Styles) ---
   {
     id: 'art_oil',
     category: 'artistic',
@@ -143,24 +114,6 @@ const FILTER_PRESETS: FilterPreset[] = [
     prompt: 'Apply a futuristic cyberpunk aesthetic with vibrant pink, cyan, and purple lighting, rain reflections, and high contrast.',
     icon: <Zap className="w-4 h-4" />,
     color: 'bg-purple-100 text-purple-700'
-  },
-  {
-    id: 'art_vintage',
-    category: 'artistic',
-    name: { en: 'Vintage', zh: '复古胶片' },
-    description: { en: 'Film Grain', zh: '怀旧电影感' },
-    prompt: 'Apply a warm 1980s film aesthetic with slight grain, vintage color shift, and soft bloom on highlights.',
-    icon: <Film className="w-4 h-4" />,
-    color: 'bg-yellow-100 text-yellow-700'
-  },
-  {
-    id: 'art_watercolor',
-    category: 'artistic',
-    name: { en: 'Watercolor', zh: '清新水彩' },
-    description: { en: 'Soft colors', zh: '透明渲染' },
-    prompt: 'Transform the image into a beautiful watercolor painting with soft bleeding edges and vibrant transparent colors.',
-    icon: <Wind className="w-4 h-4" />,
-    color: 'bg-blue-100 text-blue-700'
   }
 ];
 
@@ -169,7 +122,6 @@ const ASPECT_RATIOS = [
   { id: '4:3', label: '4:3', icon: <RectangleHorizontal size={16} /> },
   { id: '3:4', label: '3:4', icon: <RectangleVertical size={16} /> },
   { id: '16:9', label: '16:9', icon: <RectangleHorizontal size={16} className="scale-x-125" /> },
-  { id: '9:16', label: '9:16', icon: <RectangleVertical size={16} className="scale-y-125" /> },
 ];
 
 const TRANSLATIONS = {
@@ -269,7 +221,7 @@ const ImageCard: React.FC<{
   return (
     <div className="relative group bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all hover:shadow-xl hover:border-indigo-200">
       <div 
-        className={`aspect-square relative overflow-hidden bg-slate-50 flex items-center justify-center ${item.status === 'completed' ? 'cursor-zoom-in' : ''}`}
+        className={`aspect-square relative overflow-hidden bg-checkerboard flex items-center justify-center ${item.status === 'completed' ? 'cursor-zoom-in' : ''}`}
         onClick={() => item.status === 'completed' && item.processedUrl && onPreview(item)}
       >
         {item.status === 'processing' && (
@@ -288,14 +240,12 @@ const ImageCard: React.FC<{
               onMouseDown={(e) => { e.stopPropagation(); setShowOriginal(true); }}
               onMouseUp={(e) => { e.stopPropagation(); setShowOriginal(false); }}
               onMouseLeave={() => setShowOriginal(false)}
-              onTouchStart={(e) => { e.stopPropagation(); setShowOriginal(true); }}
-              onTouchEnd={() => setShowOriginal(false)}
-              className="w-10 h-10 bg-white/90 backdrop-blur rounded-xl flex items-center justify-center text-slate-600 shadow-lg border border-slate-200 hover:bg-white active:scale-90 transition-transform"
+              className="w-10 h-10 bg-white/95 backdrop-blur rounded-xl flex items-center justify-center text-slate-600 shadow-xl border border-slate-200 hover:bg-white active:scale-90 transition-transform"
               title={t.compare}
             >
               <Eye size={18} />
             </button>
-            <div className="w-10 h-10 bg-indigo-600/90 backdrop-blur rounded-xl flex items-center justify-center text-white shadow-lg border border-indigo-400">
+            <div className="w-10 h-10 bg-indigo-600/90 backdrop-blur rounded-xl flex items-center justify-center text-white shadow-xl border border-indigo-400">
               <Maximize2 size={18} />
             </div>
           </div>
@@ -335,17 +285,6 @@ const ImageCard: React.FC<{
           <p className="text-sm text-slate-700 font-semibold truncate leading-relaxed">{item.prompt}</p>
         </div>
         <div className="flex gap-1.5">
-          {item.processedUrl && (
-            <a 
-              href={item.processedUrl} 
-              download={`gemini-edit-${item.id}.png`}
-              className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
-              title={t.download}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Download className="w-5 h-5" />
-            </a>
-          )}
           <button 
             onClick={(e) => { e.stopPropagation(); onRemove(item.id); }}
             className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
@@ -366,7 +305,7 @@ const ComparisonSlider: React.FC<{ before: string, after: string, adjustments: a
   const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const x = 'touches' in e ? (e as React.TouchEvent).touches[0].clientX : (e as React.MouseEvent).clientX;
     const newPos = ((x - rect.left) / rect.width) * 100;
     setPosition(Math.min(Math.max(newPos, 0), 100));
   };
@@ -374,27 +313,29 @@ const ComparisonSlider: React.FC<{ before: string, after: string, adjustments: a
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-full select-none overflow-hidden cursor-ew-resize rounded-2xl bg-slate-900"
+      className="relative w-full h-full select-none overflow-hidden cursor-ew-resize rounded-2xl bg-[#111]"
       onMouseMove={handleMove}
       onTouchMove={handleMove}
     >
+      <div className="absolute inset-0 w-full h-full bg-checkerboard-dark opacity-30"></div>
+      
       <img 
         src={after} 
         alt="After" 
-        className="absolute inset-0 w-full h-full object-contain p-4"
+        className="absolute inset-0 w-full h-full object-contain p-4 z-1"
         style={{
           filter: `brightness(${adjustments.brightness}%) contrast(${adjustments.contrast}%) saturate(${adjustments.saturation}%)`
         }}
       />
       
       <div 
-        className="absolute inset-0 w-full h-full overflow-hidden border-r-2 border-white shadow-xl z-10"
+        className="absolute inset-0 w-full h-full overflow-hidden border-r-2 border-white shadow-[10px_0_30px_rgba(0,0,0,0.5)] z-10"
         style={{ width: `${position}%` }}
       >
         <img 
           src={before} 
           alt="Before" 
-          className="absolute inset-0 w-full h-full object-contain p-4 bg-slate-100/50 backdrop-blur-sm"
+          className="absolute inset-0 w-full h-full object-contain p-4 bg-slate-800/20 backdrop-blur-sm"
           style={{ width: `${100 / (position / 100)}%` }}
         />
         <div className="absolute top-4 left-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded font-bold uppercase">Original</div>
@@ -544,38 +485,39 @@ export default function App() {
       {/* Lightbox Preview */}
       {previewItem && (
         <div 
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/98 backdrop-blur-2xl transition-all animate-in fade-in duration-300"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 backdrop-blur-xl transition-all animate-in fade-in duration-300"
           onClick={() => { setPreviewItem(null); setAdjustments({ brightness: 100, contrast: 100, saturation: 100 }); }}
         >
-          <button className="absolute top-6 right-6 p-4 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-[70]">
+          <button className="absolute top-6 right-6 p-4 bg-white/10 hover:bg-red-500/20 text-white rounded-full transition-all z-[70] hover:rotate-90">
             <X size={28} />
           </button>
           
           <div className="w-full h-full flex flex-col lg:flex-row p-4 lg:p-10 gap-8" onClick={e => e.stopPropagation()}>
-            <div className="flex-1 relative flex items-center justify-center bg-black/40 rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl">
+            <div className="flex-1 relative flex items-center justify-center bg-black rounded-[2.5rem] overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
               <ComparisonSlider before={previewItem.originalUrl} after={previewItem.processedUrl!} adjustments={adjustments} />
             </div>
 
-            <div className="lg:w-80 flex flex-col gap-6 bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10 shadow-2xl h-fit self-center">
+            {/* Dark Mode Panel for High Contrast */}
+            <div className="lg:w-80 flex flex-col gap-6 bg-slate-900/95 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/15 shadow-2xl h-fit self-center">
               <div>
                 <h4 className="text-white font-black flex items-center gap-3 mb-2">
                   <SlidersHorizontal size={20} className="text-indigo-400" />
                   {t.adjust}
                 </h4>
-                <p className="text-white/40 text-[10px] uppercase font-bold tracking-widest">{t.compareSlider}</p>
+                <p className="text-slate-400 text-[10px] uppercase font-bold tracking-widest">{t.compareSlider}</p>
               </div>
 
               <div className="space-y-6">
                 {[{ key: 'brightness', label: t.brightness }, { key: 'contrast', label: t.contrast }, { key: 'saturation', label: t.saturation }].map(({ key, label }) => (
                   <div key={key} className="space-y-3">
                     <div className="flex justify-between">
-                      <label className="text-xs font-bold text-white/60 uppercase tracking-widest">{label}</label>
+                      <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">{label}</label>
                       <span className="text-xs font-black text-indigo-400">{(adjustments as any)[key]}%</span>
                     </div>
                     <input 
                       type="range" min="0" max="200" value={(adjustments as any)[key]} 
                       onChange={e => setAdjustments({...adjustments, [key]: parseInt(e.target.value)})}
-                      className="w-full accent-indigo-500 bg-white/10 h-1.5 rounded-full appearance-none cursor-pointer"
+                      className="w-full accent-indigo-500 bg-white/10 h-1.5 rounded-full appearance-none cursor-pointer hover:bg-white/20 transition-colors"
                     />
                   </div>
                 ))}
@@ -583,7 +525,7 @@ export default function App() {
 
               <button 
                 onClick={() => setAdjustments({ brightness: 100, contrast: 100, saturation: 100 })}
-                className="flex items-center justify-center gap-2 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all border border-white/5"
+                className="flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-xs font-bold transition-all border border-white/5 active:scale-95"
               >
                 <RotateCcw size={14} />
                 {t.reset}
@@ -593,7 +535,7 @@ export default function App() {
                 <a 
                   href={previewItem.processedUrl} 
                   download="gemini-edited.png"
-                  className="w-full py-4 bg-white text-slate-900 font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-indigo-50 transition-all shadow-xl active:scale-95"
+                  className="w-full py-4 bg-indigo-600 text-white font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-indigo-500 transition-all shadow-xl active:scale-95"
                 >
                   <Download size={20} />
                   {t.download}
@@ -619,7 +561,7 @@ export default function App() {
       <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-100 rotate-3">
+            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-100 rotate-3 transition-transform hover:rotate-0">
               <Sparkles size={28} />
             </div>
             <div>
@@ -629,9 +571,9 @@ export default function App() {
               <div className="flex items-center gap-2 mt-1">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">{t.subtitle}</p>
                  <span className="w-1 h-1 bg-slate-200 rounded-full"></span>
-                 <div className="flex items-center gap-1 px-2 py-0.5 bg-indigo-50 rounded-full text-[9px] font-bold text-indigo-500 border border-indigo-100/50 transition-transform hover:scale-105">
+                 <div className="flex items-center gap-1.5 px-2 py-0.5 bg-indigo-50 rounded-full text-[9px] font-black text-indigo-500 border border-indigo-100/50 hover:bg-indigo-100 transition-colors cursor-default">
                     <User size={8} className="text-indigo-400" />
-                    {t.createdBy}{t.authorName}
+                    {t.createdBy}<span className="underline decoration-indigo-200">{t.authorName}</span>
                  </div>
               </div>
             </div>
@@ -640,7 +582,7 @@ export default function App() {
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setLang(lang === 'en' ? 'zh' : 'en')}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all text-slate-600 font-bold text-sm bg-white"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all text-slate-600 font-bold text-sm bg-white active:scale-95"
             >
               <Languages size={18} />
               <span className="hidden sm:inline">{lang === 'en' ? '中文' : 'English'}</span>
@@ -709,7 +651,8 @@ export default function App() {
                         }`}
                       >
                         <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-sm ${filter.color}`}>
-                          {filter.icon}
+                          {/* Fix: cast to any for cloneElement to satisfy TypeScript about size prop */}
+                          {React.cloneElement(filter.icon as React.ReactElement<any>, { size: 16 })}
                         </div>
                         <div className="text-center">
                           <p className={`text-[11px] font-black leading-tight truncate w-full ${selectedFilterId === filter.id ? 'text-indigo-900' : 'text-slate-800'}`}>{filter.name[lang]}</p>
@@ -725,11 +668,12 @@ export default function App() {
                       <button
                         key={ratio.id}
                         onClick={() => setSelectedRatio(ratio.id)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border-2 transition-all font-bold text-[10px] ${
-                          selectedRatio === ratio.id ? 'bg-white border-indigo-600 text-indigo-600 shadow-md' : 'bg-white border-slate-100 text-slate-400'
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border-2 transition-all font-bold text-[10px] active:scale-95 ${
+                          selectedRatio === ratio.id ? 'bg-white border-indigo-600 text-indigo-600 shadow-md' : 'bg-white border-slate-100 text-slate-400 hover:border-slate-300'
                         }`}
                       >
-                        {ratio.icon} {ratio.label}
+                         {/* Fix: cast to any for cloneElement to satisfy TypeScript about size prop */}
+                        {React.cloneElement(ratio.icon as React.ReactElement<any>, { size: 14 })} {ratio.label}
                       </button>
                     ))}
                   </div>
@@ -750,7 +694,7 @@ export default function App() {
                   <button onClick={handleBatchDownload} disabled={isZipping} className="px-5 py-2.5 bg-indigo-50 text-indigo-600 font-bold hover:bg-indigo-100 rounded-2xl transition-all text-sm flex items-center gap-2 shadow-sm border border-indigo-200 active:scale-95">
                     {isZipping ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Archive size={16} />} {isZipping ? t.zipping : t.downloadAll}
                   </button>
-                  <button onClick={() => setImages([])} className="px-4 py-2 text-red-500 font-bold hover:bg-red-50 rounded-xl transition-colors text-sm flex items-center gap-2">
+                  <button onClick={() => setImages([])} className="px-4 py-2 text-red-500 font-bold hover:bg-red-50 rounded-xl transition-colors text-sm flex items-center gap-2 active:scale-95">
                     <Trash2 size={16} /> {t.clear}
                   </button>
                </div>
@@ -776,49 +720,26 @@ export default function App() {
               </div>
               <h3 className="text-3xl font-black text-slate-800 mb-4">{t.noImagesTitle}</h3>
               <p className="text-slate-500 text-center max-w-md mb-8 px-10 font-bold text-lg leading-relaxed">{t.noImagesDesc}</p>
-              <div className="px-12 py-5 bg-indigo-600 text-white rounded-3xl font-black text-lg shadow-xl shadow-indigo-100 group-hover:bg-indigo-700 transition-all">{t.uploadFirst}</div>
+              <div className="px-12 py-5 bg-indigo-600 text-white rounded-3xl font-black text-lg shadow-xl shadow-indigo-100 group-hover:bg-indigo-700 transition-all active:scale-95">{t.uploadFirst}</div>
               <span className="text-xs text-slate-400 mt-6 font-bold uppercase tracking-widest">{t.fileSupport}</span>
             </label>
           </div>
         )}
       </main>
 
-      {/* Footer Signature */}
-      <footer className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-slate-200 mt-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+      <footer className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-slate-200 mt-10 flex items-center justify-between">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 border border-slate-200">
-               <ImageIcon size={20} />
-             </div>
-             <div>
-                <p className="text-slate-900 font-black text-sm">{t.title}</p>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">© {new Date().getFullYear()} {t.copyright}</p>
-             </div>
+             <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">© {new Date().getFullYear()} {t.copyright}</p>
           </div>
-
-          <div className="flex flex-col items-center md:items-end">
-             <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2">
                 <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">{t.createdBy}</span>
-                <span className="px-3 py-1.5 bg-white border border-indigo-100 rounded-lg text-indigo-600 font-black text-xs shadow-sm shadow-indigo-50/50 flex items-center gap-2">
+                <span className="px-3 py-1.5 bg-white border border-indigo-100 rounded-lg text-indigo-600 font-black text-xs shadow-sm">
                   {t.authorName}
-                  <ExternalLink size={10} className="text-indigo-300" />
                 </span>
-             </div>
-             <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400">
-                <span>POWERED BY</span>
-                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-slate-100 rounded border border-slate-200">
-                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                   <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                   <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                   <span className="text-slate-600 tracking-tighter">Gemini 2.5 Flash</span>
-                </div>
-             </div>
           </div>
-        </div>
       </footer>
 
-      {images.some(img => img.status === 'completed') && (
+      {images.some(img => img.status === 'completed') && !previewItem && (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 w-full max-w-xl px-6">
           <div className="bg-slate-900/95 backdrop-blur-2xl px-10 py-5 rounded-[2.5rem] flex items-center justify-between shadow-2xl border border-white/10">
             <div className="flex flex-col">
@@ -843,6 +764,27 @@ export default function App() {
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+        
+        .bg-checkerboard {
+          background-color: #f1f5f9;
+          background-image: 
+            linear-gradient(45deg, #e2e8f0 25%, transparent 25%), 
+            linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), 
+            linear-gradient(45deg, transparent 75%, #e2e8f0 75%), 
+            linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+          background-size: 16px 16px;
+          background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+        }
+
+        .bg-checkerboard-dark {
+          background-image: 
+            linear-gradient(45deg, #222 25%, transparent 25%), 
+            linear-gradient(-45deg, #222 25%, transparent 25%), 
+            linear-gradient(45deg, transparent 75%, #222 75%), 
+            linear-gradient(-45deg, transparent 75%, #222 75%);
+          background-size: 24px 24px;
+          background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
+        }
       `}</style>
     </div>
   );
