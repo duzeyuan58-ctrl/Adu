@@ -110,7 +110,7 @@ const FILTER_PRESETS: FilterPreset[] = [
     name: { en: 'Cyberpunk', zh: '赛博朋克' },
     description: { en: 'Neon vibe', zh: '幻彩霓虹' },
     prompt: 'Apply a futuristic cyberpunk aesthetic with vibrant pink, cyan, and purple lighting, rain reflections, and high contrast.',
-    icon: <Zap className="w-4 h-4" />,
+    icon: <Zap size={16} className="w-4 h-4" />,
     color: 'bg-purple-100 text-purple-700'
   }
 ];
@@ -172,6 +172,7 @@ const TRANSLATIONS = {
     helpDeployStep1: 'Upload files to GitHub.',
     helpDeployStep2: 'Link to Vercel/Netlify.',
     helpDeployStep3: 'Add "API_KEY" in env variables.',
+    getKey: 'Get your API Key here (Free)',
     gotIt: 'Got it'
   },
   zh: {
@@ -223,6 +224,7 @@ const TRANSLATIONS = {
     helpDeployStep1: '将代码上传到 GitHub 仓库。',
     helpDeployStep2: '在 Vercel 关联仓库进行托管。',
     helpDeployStep3: '在设置中添加 API_KEY 环境变量即可。',
+    getKey: '在这里获取你的 API 密钥 (免费申请)',
     gotIt: '我知道了'
   }
 };
@@ -553,11 +555,22 @@ export default function App() {
                  </div>
               </div>
 
-              <div className="mt-10 p-5 bg-indigo-50 rounded-2xl border border-indigo-100 flex items-start gap-4">
-                 <Key className="text-indigo-400 shrink-0 mt-1" />
-                 <p className="text-xs font-bold text-indigo-600 leading-relaxed italic">
-                    {lang === 'zh' ? '特别注意：API Key 是工具的“心脏”。发布到 Vercel 时，请务必在 "Environment Variables" 里添加名为 API_KEY 的变量。' : 'Important: API Key is the heart of the tool. When deploying to Vercel, ensure you add "API_KEY" in the Environment Variables section.'}
-                 </p>
+              <div className="mt-10 p-5 bg-indigo-50 rounded-2xl border border-indigo-100 space-y-4">
+                 <div className="flex items-start gap-4">
+                    <Key className="text-indigo-400 shrink-0 mt-1" />
+                    <p className="text-xs font-bold text-indigo-600 leading-relaxed italic">
+                       {lang === 'zh' ? '特别注意：API Key 是工具的“心脏”。发布到 Vercel 时，请务必在 "Environment Variables" 里添加名为 API_KEY 的变量。' : 'Important: API Key is the heart of the tool. When deploying to Vercel, ensure you add "API_KEY" in the Environment Variables section.'}
+                    </p>
+                 </div>
+                 <a 
+                   href="https://aistudio.google.com/app/apikey" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   className="flex items-center justify-center gap-2 w-full py-3 bg-white border border-indigo-200 rounded-xl text-indigo-600 text-xs font-black hover:bg-indigo-50 transition-colors shadow-sm"
+                 >
+                   <ExternalLink size={14} />
+                   {t.getKey}
+                 </a>
               </div>
 
               <button 
