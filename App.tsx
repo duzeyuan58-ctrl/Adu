@@ -45,7 +45,8 @@ import {
   BookOpen,
   Rocket,
   Key,
-  Image as ImageIcon 
+  Image as ImageIcon,
+  Settings 
 } from 'lucide-react';
 
 interface FilterPreset {
@@ -173,7 +174,10 @@ const TRANSLATIONS = {
     helpDeployStep2: 'Link to Vercel/Netlify.',
     helpDeployStep3: 'Add "API_KEY" in env variables.',
     getKey: 'Get your API Key here (Free)',
-    gotIt: 'Got it'
+    gotIt: 'Got it',
+    envError: 'Vercel Config Missing',
+    envErrorDesc: 'API_KEY environment variable is not set on Vercel.',
+    envErrorFix: 'Go to Vercel Dashboard > Settings > Environment Variables, add API_KEY, and RE-DEPLOY.',
   },
   zh: {
     title: 'Vision Editor',
@@ -225,7 +229,10 @@ const TRANSLATIONS = {
     helpDeployStep2: '在 Vercel 关联仓库进行托管。',
     helpDeployStep3: '在设置中添加 API_KEY 环境变量即可。',
     getKey: '在这里获取你的 API 密钥 (免费申请)',
-    gotIt: '我知道了'
+    gotIt: '我知道了',
+    envError: 'Vercel 环境变量缺失',
+    envErrorDesc: '你的 Vercel 部署中没有找到 API_KEY 变量。',
+    envErrorFix: '请前往 Vercel 项目面板 > Settings > Environment Variables，添加名为 API_KEY 的变量，并【重新部署】项目。',
   }
 };
 
@@ -389,6 +396,7 @@ export default function App() {
   const [isDragging, setIsDragging] = useState(false);
   const [previewItem, setPreviewItem] = useState<ImageItem | null>(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [showEnvError, setShowEnvError] = useState(false);
   
   const [adjustments, setAdjustments] = useState({
     brightness: 100,
@@ -444,13 +452,16 @@ export default function App() {
         img.id === id ? { ...img, processedUrl, status: 'completed' } : img
       ));
     } catch (err: any) {
-      let errorMsg = err.message || 'API Error';
-      if (errorMsg.includes('API_KEY')) {
-        errorMsg = lang === 'zh' ? '检测到 API 密钥未配置，请检查环境变量。' : 'API Key not found. Please check env variables.';
+      if (err.message === "MISSING_ENV_KEY") {
+        setShowEnvError(true);
+        setImages(prev => prev.map(img => 
+          img.id === id ? { ...img, status: 'error', error: t.envError } : img
+        ));
+      } else {
+        setImages(prev => prev.map(img => 
+          img.id === id ? { ...img, status: 'error', error: err.message || 'API Error' } : img
+        ));
       }
-      setImages(prev => prev.map(img => 
-        img.id === id ? { ...img, status: 'error', error: errorMsg } : img
-      ));
     }
   };
 
@@ -511,6 +522,30 @@ export default function App() {
       onDragLeave={() => setIsDragging(false)}
       onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFiles(e.dataTransfer.files); }}
     >
+      {/* Vercel Env Error Modal */}
+      {showEnvError && (
+        <div className="fixed inset-0 z-[250] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-xl animate-in fade-in duration-300">
+           <div className="bg-white rounded-[3rem] shadow-2xl max-w-xl w-full p-10 border-4 border-amber-200 overflow-hidden relative text-center">
+              <div className="w-20 h-20 bg-amber-100 rounded-3xl flex items-center justify-center text-amber-600 mx-auto mb-6 shadow-inner">
+                 <Settings size={40} className="animate-spin-slow" />
+              </div>
+              <h2 className="text-3xl font-black text-slate-900 mb-4">{t.envError}</h2>
+              <p className="text-slate-600 font-bold mb-8 leading-relaxed">
+                {t.envErrorDesc}<br/>
+                <span className="text-amber-600 text-sm mt-4 block bg-amber-50 p-4 rounded-2xl border border-amber-100">
+                  {t.envErrorFix}
+                </span>
+              </p>
+              <button 
+                onClick={() => setShowEnvError(false)}
+                className="w-full py-4 bg-slate-900 text-white font-black rounded-2xl hover:bg-slate-800 transition-all shadow-xl active:scale-95"
+              >
+                {t.gotIt}
+              </button>
+           </div>
+        </div>
+      )}
+
       {/* Help Modal */}
       {showHelp && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-md animate-in fade-in duration-300">
@@ -963,6 +998,12 @@ export default function App() {
           background-size: 32px 32px;
           background-position: 0 0, 0 16px, 16px -16px, -16px 0px;
         }
+
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow { animation: spin-slow 8s linear infinite; }
 
         @keyframes bounce-subtle {
           0%, 100% { transform: translateY(-5%); }

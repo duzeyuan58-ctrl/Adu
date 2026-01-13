@@ -7,8 +7,13 @@ export async function editImage(
   prompt: string, 
   aspectRatio: string = "1:1"
 ): Promise<string> {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = process.env.API_KEY;
   
+  if (!apiKey || apiKey === "undefined" || apiKey === "") {
+    throw new Error("MISSING_ENV_KEY");
+  }
+
+const ai = new GoogleGenAI({ apiKey: "AIzaSyDKvsz8eJ8L7wdFoRGxqyGX4dZ4KD4o2fo" });
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
@@ -60,7 +65,6 @@ export async function fileToBase64(file: File): Promise<string> {
     reader.readAsDataURL(file);
     reader.onload = () => {
       const result = reader.result as string;
-      // Remove the "data:image/png;base64," part
       resolve(result.split(',')[1]);
     };
     reader.onerror = (error) => reject(error);
